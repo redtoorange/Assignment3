@@ -73,6 +73,8 @@ public class MainFrame extends JFrame {
 
         fileList = new JPanel();
         fileList.setLayout( new GridBagLayout() );
+        fileList.setLayout( new BoxLayout( fileList, BoxLayout.Y_AXIS ) );
+
 
         JScrollPane scrollPane = new JScrollPane( fileList );
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
@@ -115,6 +117,11 @@ public class MainFrame extends JFrame {
 
         if( position < 0){
             GridBagConstraints c = new GridBagConstraints();
+            c.ipady = 0;
+
+            c.fill = 0;
+            c.weighty = 0.1;
+            c.anchor = GridBagConstraints.FIRST_LINE_START;
             c.gridx = 0;
             c.gridy = fileCount;
 
@@ -160,7 +167,7 @@ public class MainFrame extends JFrame {
         for( int i = 0; i < components.length; i++){
             if( components[i] instanceof FilePanel) {
                 FilePanel fp = (FilePanel) components[i];
-                Thread t = new Thread( new FileRunner( fp.getFile() ) );
+                Thread t = new Thread( new FileRunner( fp.getFilePath() ) );
                 t.start();
             }
         }

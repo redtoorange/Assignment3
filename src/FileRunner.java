@@ -12,37 +12,86 @@ import java.util.Scanner;
  * @version 03/Nov/2017
  */
 public class FileRunner implements Runnable {
-    private JFrame fileFrame;
-    private JPanel filePanel;
-
     private int wordCount = 0;
     private int letterCount = 0;
     private String fileContents = "";
 
     private File file = null;
+    private boolean validFile = false;
 
-    public FileRunner( File f ) {
-        if ( f.exists() ) {
-            file = f;
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Could not load file <" + f.getPath() +">." ,
-                    "File Load Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+    public FileRunner( String filePath ) {
+        file = new File( filePath );
+
+        if ( file.exists() )
+            validFile = true;
+
+        else
+            displayError( "Could not load file <" + filePath + ">." );
     }
 
     @Override
     public void run() {
-        if ( file != null && parseFile() )
+        if ( validFile && parseFile() )
             initGUI();
     }
 
+
+    private boolean parseFile() {
+        boolean success = true;
+
+        try {
+            BufferedReader reader = new BufferedReader( new FileReader( file ) );
+            Scanner scanner = new Scanner( reader );
+            StringBuilder builder = new StringBuilder();
+
+            while ( scanner.hasNextLine() ) {
+                String s = scanner.nextLine();
+                builder.append( s );
+                builder.append( "\n" );
+
+                Scanner lineScanner = new Scanner( s );
+                while ( lineScanner.hasNext() ) {
+                    String token = lineScanner.next();
+
+                    // Ensure that the token was not empty
+                    if ( token.length() > 0 ) {
+                        boolean validWord = false;
+
+                        //Check the Token's characters to see if they are letters
+                        for ( char c : token.toCharArray() ) {
+                            //Found a letter!
+                            if ( c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' ) {
+                                letterCount++;
+                                validWord = true;
+                            }
+                        }
+
+                        //The token contains atleast one valid character,
+                        //  so it should be counted
+                        if ( validWord )
+                            wordCount++;
+                    }
+
+
+                }
+            }
+
+            fileContents = builder.toString();
+            scanner.close();
+            reader.close();
+        } catch ( Exception e ) {
+            displayError( "A fatal error has occurred trying to parse <" + file.getPath() + ">." );
+            success = false;
+        }
+
+        return success;
+    }
+
     private void initGUI() {
-        fileFrame = new JFrame( file.getName() );
+        JFrame fileFrame = new JFrame( file.getName() );
         fileFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
-        filePanel = new JPanel( new GridBagLayout() );
+        JPanel filePanel = new JPanel( new GridBagLayout() );
         filePanel.setPreferredSize( new Dimension( 500, 800 ) );
 
         GridBagConstraints c = new GridBagConstraints();
@@ -77,52 +126,10 @@ public class FileRunner implements Runnable {
         fileFrame.setVisible( true );
     }
 
-    private boolean parseFile() {
-        boolean success = true;
-        try {
-            BufferedReader reader = new BufferedReader( new FileReader( file ) );
-
-            Scanner scanner = new Scanner( reader );
-            while ( scanner.hasNextLine() ) {
-                String s = scanner.nextLine();
-                fileContents += s + "\n";
-
-                Scanner lineScanner = new Scanner( s );
-                while ( lineScanner.hasNext() ) {
-                    String token = lineScanner.next();
-
-                    // Ensure that the token was not empty
-                    if ( token.length() > 0 ) {
-                        boolean validWord = false;
-
-                        //Check the Token's characters to see if they are letters
-                        for ( char c : token.toCharArray() ) {
-                            //Found a letter!
-                            if ( c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' ) {
-                                letterCount++;
-                                validWord = true;
-                            }
-                        }
-
-                        //The token contains atleast one valid character,
-                        //  so it should be counted
-                        if ( validWord )
-                            wordCount++;
-                    }
-
-
-                }
-            }
-
-            reader.close();
-        } catch ( Exception e ) {
-            success = false;
-            JOptionPane.showMessageDialog(null,
-                    "Could not load file <" + file.getPath() +">." ,
-                    "File Load Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
-        return success;
+    private void displayError( String message ) {
+        JOptionPane.showMessageDialog( null,
+                message,
+                "File Load Error",
+                JOptionPane.ERROR_MESSAGE );
     }
 }
