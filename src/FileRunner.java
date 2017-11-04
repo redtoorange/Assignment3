@@ -13,18 +13,19 @@ import java.util.Scanner;
  */
 public class FileRunner implements Runnable {
     private JFrame fileFrame;
+    private JPanel filePanel;
+
     private int wordCount = 0;
     private int letterCount = 0;
     private String fileContents = "";
 
     private File file;
 
-    public FileRunner(File f){
-        if( f.exists() ) {
+    public FileRunner( File f ) {
+        if ( f.exists() ) {
             file = f;
-            System.out.println( "Found the file <" + f.getName() + ">.");
-        }
-        else{
+            System.out.println( "Found the file <" + f.getName() + ">." );
+        } else {
             System.out.println( "Passed in file <" + f.getName() + "> does not exist." );
         }
     }
@@ -38,14 +39,14 @@ public class FileRunner implements Runnable {
         //TODO: displayGUI();
     }
 
-    private void initGUI(){
-        fileFrame = new JFrame(file.getName());
+    private void initGUI() {
+        fileFrame = new JFrame( file.getName() );
         fileFrame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
-        JPanel filePanel = new JPanel( new GridBagLayout() );
+        filePanel = new JPanel( new GridBagLayout() );
         filePanel.setPreferredSize( new Dimension( 500, 800 ) );
 
-        GridBagConstraints c = new GridBagConstraints(  );
+        GridBagConstraints c = new GridBagConstraints();
 
         JLabel wordCountLabel = new JLabel( "Words: " + wordCount );
         wordCountLabel.setPreferredSize( new Dimension( 100, 50 ) );
@@ -64,7 +65,7 @@ public class FileRunner implements Runnable {
         c.gridy = 1;
         c.gridwidth = 3;
 
-        JTextArea textArea = new JTextArea(  );
+        JTextArea textArea = new JTextArea();
         textArea.setText( fileContents );
 
         JScrollPane scrollPane = new JScrollPane( textArea );
@@ -77,27 +78,27 @@ public class FileRunner implements Runnable {
         fileFrame.setVisible( true );
     }
 
-    private void parseFile(){
-        try{
+    private void parseFile() {
+        try {
             BufferedReader reader = new BufferedReader( new FileReader( file ) );
 
             Scanner scanner = new Scanner( reader );
-            while( scanner.hasNextLine() ) {
+            while ( scanner.hasNextLine() ) {
                 String s = scanner.nextLine();
                 fileContents += s + "\n";
 
                 Scanner lineScanner = new Scanner( s );
-                while( lineScanner.hasNext()){
+                while ( lineScanner.hasNext() ) {
                     String token = lineScanner.next();
 
                     // Ensure that the token was not empty
-                    if( token.length() > 0 ){
+                    if ( token.length() > 0 ) {
                         boolean validWord = false;
 
                         //Check the Token's characters to see if they are letters
-                        for(char c : token.toCharArray()){
+                        for ( char c : token.toCharArray() ) {
                             //Found a letter!
-                            if( c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'){
+                            if ( c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' ) {
                                 letterCount++;
                                 validWord = true;
                             }
@@ -105,7 +106,7 @@ public class FileRunner implements Runnable {
 
                         //The token contains atleast one valid character,
                         //  so it should be counted
-                        if( validWord )
+                        if ( validWord )
                             wordCount++;
                     }
 
@@ -114,8 +115,7 @@ public class FileRunner implements Runnable {
             }
 
             reader.close();
-        }
-        catch( Exception e){
+        } catch ( Exception e ) {
             System.out.println( "File could not be read." );
         }
 
