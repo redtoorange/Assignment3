@@ -21,15 +21,18 @@ public class MainFrame extends JFrame {
 
     private static final int BUTTON_WIDTH = 150;
     private static final int BUTTON_HEIGHT = 40;
-    JFileChooser fileChooser;
+
+
+    private JFileChooser fileChooser;
     private JPanel mainPanel;
+    private JPanel fileList;
+
     private ArrayList< Thread > threads;
-    private ArrayList< File > files;
+
     private int fileCount = 0;
 
     public MainFrame() {
         threads = new ArrayList< Thread >();
-        files = new ArrayList< File >();
 
 
         try {
@@ -68,18 +71,12 @@ public class MainFrame extends JFrame {
         c.gridy = 1;
         c.gridwidth = 2;
 
-        final JPanel subPanel = new JPanel();
+        fileList = new JPanel();
+        fileList.setLayout( new GridBagLayout() );
 
-        GridBagLayout gbl = new GridBagLayout();
-
-
-        subPanel.setLayout( gbl );
-
-
-        JScrollPane scrollPane = new JScrollPane( subPanel );
+        JScrollPane scrollPane = new JScrollPane( fileList );
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
         scrollPane.setBorder( new BorderUIResource.BevelBorderUIResource( BevelBorder.LOWERED ) );
-
 
         mainPanel.add( scrollPane, c );
 
@@ -90,27 +87,10 @@ public class MainFrame extends JFrame {
             fileChooser.showDialog( null, "Select" );
 
             File[] selectedFiles = fileChooser.getSelectedFiles();
+
             if ( selectedFiles.length > 0 ) {
-                int start = fileCount;
-
-                for ( int i = 0; i < selectedFiles.length; i++ ) {
-                    if ( !files.contains( selectedFiles[i] ) ) {
-                        files.add( selectedFiles[i] );
-                        fileCount++;
-                    }
-                }
-
-                GridBagConstraints sc = new GridBagConstraints();
-                sc.gridx = 0;
-
-
-                for ( int i = start; i < fileCount; i++ ) {
-                    sc.gridy = i;
-                    subPanel.add( new FilePanel( files.get( i ) ), sc );
-                }
-
-                repaint();
-                revalidate();
+                for ( int i = 0; i < selectedFiles.length; i++ )
+                    addFile( selectedFiles[i] );
             }
         } );
 
@@ -122,22 +102,67 @@ public class MainFrame extends JFrame {
 
         JButton loadFiles = new JButton( "Load Files" );
         loadFiles.setPreferredSize( new Dimension( BUTTON_WIDTH, BUTTON_HEIGHT ) );
-        loadFiles.addActionListener(
-                ( ae ) ->
-                {
-                    if ( !files.isEmpty() ) {
-                        for ( File f : files ) {
-                            Thread t = new Thread( new FileRunner( f ) );
-                            threads.add( t );
-                            t.start();
-                        }
-                    }
-                }
-        );
+        loadFiles.addActionListener( ( e ) -> launchThreads() );
         c.gridx = 1;
         c.gridy = 2;
         c.anchor = GridBagConstraints.EAST;
         mainPanel.add( loadFiles, c );
+    }
 
+
+    private void addFile( File file ){
+        int position = locateFile( file );
+
+        if( position < 0){
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = fileCount;
+
+            fileList.add( new FilePanel( file, this ), c);
+            fileCount++;
+
+            repaint();
+            revalidate();
+        }
+    }
+
+    public void removeFile( File file){
+        int position = locateFile( file );
+
+        if( position >= 0) {
+            fileList.remove( position);
+
+            repaint();
+            revalidate();
+        }
+    }
+
+    private int locateFile( File file){
+        int pos = -1;
+
+        Component[] components = fileList.getComponents();
+        for( int i = 0; i < components.length; i++){
+            if( components[i] instanceof FilePanel) {
+                FilePanel fp = (FilePanel) components[i];
+                if( fp.getFilePath().equals( file.getPath() )) {
+                    pos = i;
+                    break;
+                }
+            }
+        }
+
+        return pos;
+    }
+
+
+    private void launchThreads(){
+        Component[] components = fileList.getComponents();
+        for( int i = 0; i < components.length; i++){
+            if( components[i] instanceof FilePanel) {
+                FilePanel fp = (FilePanel) components[i];
+                Thread t = new Thread( new FileRunner( fp.getFile() ) );
+                t.start();
+            }
+        }
     }
 }

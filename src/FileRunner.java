@@ -19,24 +19,23 @@ public class FileRunner implements Runnable {
     private int letterCount = 0;
     private String fileContents = "";
 
-    private File file;
+    private File file = null;
 
     public FileRunner( File f ) {
         if ( f.exists() ) {
             file = f;
-            System.out.println( "Found the file <" + f.getName() + ">." );
         } else {
-            System.out.println( "Passed in file <" + f.getName() + "> does not exist." );
+            JOptionPane.showMessageDialog(null,
+                    "Could not load file <" + f.getPath() +">." ,
+                    "File Load Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
     @Override
     public void run() {
-        parseFile();
-        initGUI();
-        //TODO: parseFile();
-
-        //TODO: displayGUI();
+        if ( file != null && parseFile() )
+            initGUI();
     }
 
     private void initGUI() {
@@ -78,7 +77,8 @@ public class FileRunner implements Runnable {
         fileFrame.setVisible( true );
     }
 
-    private void parseFile() {
+    private boolean parseFile() {
+        boolean success = true;
         try {
             BufferedReader reader = new BufferedReader( new FileReader( file ) );
 
@@ -116,8 +116,13 @@ public class FileRunner implements Runnable {
 
             reader.close();
         } catch ( Exception e ) {
-            System.out.println( "File could not be read." );
+            success = false;
+            JOptionPane.showMessageDialog(null,
+                    "Could not load file <" + file.getPath() +">." ,
+                    "File Load Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
+        return success;
     }
 }

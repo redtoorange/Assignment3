@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.io.File;
@@ -21,26 +23,48 @@ public class FilePanel extends JPanel {
 
     private JButton deleteButton;
     private JTextField fileName;
-    private File file;
+    private String filePath;
+    private MainFrame controller;
 
-    public FilePanel( File file ) {
-        this.file = file;
-        initGUI( file );
+    public FilePanel( File file, MainFrame controller ) {
+        filePath = file.getPath();
+        this.controller = controller;
+
+        initGUI();
     }
 
-    private void initGUI( File file ) {
+    private void initGUI() {
         setLayout( new GridBagLayout() );
 
         setPreferredSize( new Dimension( PANE_WIDTH, PANE_HEIGHT ) );
         setBorder( BorderUIResource.getEtchedBorderUIResource() );
 
 
-        fileName = new JTextField( file.getPath() );
+        fileName = new JTextField( filePath );
         fileName.setMinimumSize( new Dimension( TEXT_WIDTH, TEXT_HEIGHT ) );
+        fileName.getDocument().addDocumentListener( new DocumentListener() {
+            @Override
+            public void insertUpdate( DocumentEvent e ) {
+                changedUpdate( e );
+            }
+
+            @Override
+            public void removeUpdate( DocumentEvent e ) {
+                changedUpdate( e );
+            }
+
+            @Override
+            public void changedUpdate( DocumentEvent e ) {
+                filePath = fileName.getText();
+                System.out.println( "File name changed to : " + filePath );
+            }
+        } );
+
 
         deleteButton = new JButton( "X" );
         deleteButton.setBackground( Color.RED );
         deleteButton.setPreferredSize( new Dimension( BUTTON_WIDTH, BUTTON_HEIGHT ) );
+        deleteButton.addActionListener( (e) -> controller.removeFile( getFile() ) );
 
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.WEST;
@@ -53,5 +77,13 @@ public class FilePanel extends JPanel {
         c.anchor = GridBagConstraints.EAST;
         c.gridx = 1;
         add( deleteButton, c );
+    }
+
+    public String getFilePath(){
+        return filePath;
+    }
+
+    public File getFile() {
+        return new File( filePath);
     }
 }
