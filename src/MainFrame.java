@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.io.File;
@@ -32,16 +31,12 @@ public class MainFrame extends JFrame {
     private int fileCount = 0;
 
     public MainFrame() {
+        setTitle( "Multi-threaded File Parser" );
         threads = new ArrayList< Thread >();
 
 
         try {
-            for ( UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels() ) {
-                if ( "Nimbus".equals( info.getName() ) ) {
-                    UIManager.setLookAndFeel( info.getClassName() );
-                    break;
-                }
-            }
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
         } catch ( Exception e ) {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
@@ -71,14 +66,18 @@ public class MainFrame extends JFrame {
         c.gridy = 1;
         c.gridwidth = 2;
 
+        //TODO: Fix this file list not resizing.
         fileList = new JPanel();
-        fileList.setLayout( new GridBagLayout() );
-        fileList.setLayout( new BoxLayout( fileList, BoxLayout.Y_AXIS ) );
+        fileList.setBackground( Color.LIGHT_GRAY );
+
+        BoxLayout box = new BoxLayout( fileList, BoxLayout.Y_AXIS );
+        fileList.setLayout( box );
 
 
+        //TODO: Scroll bars not showing
         JScrollPane scrollPane = new JScrollPane( fileList );
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
-        scrollPane.setBorder( new BorderUIResource.BevelBorderUIResource( BevelBorder.LOWERED ) );
+        scrollPane.setBorder( BorderUIResource.getBlackLineBorderUIResource() );
 
         mainPanel.add( scrollPane, c );
 
@@ -116,16 +115,7 @@ public class MainFrame extends JFrame {
         int position = locateFile( file );
 
         if( position < 0){
-            GridBagConstraints c = new GridBagConstraints();
-            c.ipady = 0;
-
-            c.fill = 0;
-            c.weighty = 0.1;
-            c.anchor = GridBagConstraints.FIRST_LINE_START;
-            c.gridx = 0;
-            c.gridy = fileCount;
-
-            fileList.add( new FilePanel( file, this ), c);
+            fileList.add( new FilePanel( file, this ) );
             fileCount++;
 
             repaint();
