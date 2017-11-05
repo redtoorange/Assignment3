@@ -9,14 +9,14 @@ import java.awt.*;
  */
 public class FileOutputFrame extends JFrame {
     //TODO: Make the top not look like shit.
-    private static final int WINDOW_WIDTH = 500;
-    private static final int WINDOW_HEIGHT = 500;
+    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_HEIGHT = 500;
 
-    private static final int SCROLL_WIDTH = WINDOW_WIDTH - 50;
-    private static final int SCROLL_HEIGHT = WINDOW_HEIGHT - 100;
+    public static final int SCROLL_WIDTH = 450;
+    public static final int SCROLL_HEIGHT = 400;
 
-    private static final int LABEL_WIDTH = 100;
-    private static final int LABEL_HEIGHT = 50;
+    public static final int LABEL_WIDTH = 100;
+    public static final int LABEL_HEIGHT = 50;
 
     private String fileName;
     private String fileContents;

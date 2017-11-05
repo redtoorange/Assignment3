@@ -12,14 +12,14 @@ import java.util.ArrayList;
  * @author unknown
  */
 public class MainFrame extends JFrame {
-    private static final int WINDOW_WIDTH = 500;
-    private static final int WINDOW_HEIGHT = 500;
+    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_HEIGHT = 500;
 
-    private static final int SCROLL_WIDTH = WINDOW_WIDTH - 50;
-    private static final int SCROLL_HEIGHT = WINDOW_HEIGHT - 150;
+    public static final int SCROLL_WIDTH = 450;
+    public static final int SCROLL_HEIGHT = 350;
 
-    private static final int BUTTON_WIDTH = 150;
-    private static final int BUTTON_HEIGHT = 40;
+    public static final int BUTTON_WIDTH = 150;
+    public static final int BUTTON_HEIGHT = 40;
 
 
     private JFileChooser fileChooser;
@@ -66,19 +66,18 @@ public class MainFrame extends JFrame {
         c.gridy = 1;
         c.gridwidth = 2;
 
-        //TODO: Fix this file list not resizing.
         fileList = new JPanel();
-        fileList.setBackground( Color.LIGHT_GRAY );
+        fileList.setPreferredSize( new Dimension( FilePanel.PANE_WIDTH, FilePanel.PANE_HEIGHT ) );
+
 
         BoxLayout box = new BoxLayout( fileList, BoxLayout.Y_AXIS );
         fileList.setLayout( box );
 
 
-        //TODO: Scroll bars not showing
         JScrollPane scrollPane = new JScrollPane( fileList );
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
         scrollPane.setBorder( BorderUIResource.getBlackLineBorderUIResource() );
-
+        scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER  );
         mainPanel.add( scrollPane, c );
 
 
@@ -111,37 +110,42 @@ public class MainFrame extends JFrame {
     }
 
 
-    private void addFile( File file ){
+    private void addFile( File file ) {
         int position = locateFile( file );
 
-        if( position < 0){
+        if ( position < 0 ) {
             fileList.add( new FilePanel( file, this ) );
             fileCount++;
 
+            fileList.setPreferredSize( new Dimension( FilePanel.PANE_WIDTH, FilePanel.PANE_HEIGHT * fileCount ) );
+
             repaint();
             revalidate();
         }
     }
 
-    public void removeFile( File file){
+    public void removeFile( File file ) {
         int position = locateFile( file );
 
-        if( position >= 0) {
-            fileList.remove( position);
+        if ( position >= 0 ) {
+            fileList.remove( position );
+            fileCount--;
+
+            fileList.setPreferredSize( new Dimension( FilePanel.PANE_WIDTH, FilePanel.PANE_HEIGHT * fileCount ) );
 
             repaint();
             revalidate();
         }
     }
 
-    private int locateFile( File file){
+    private int locateFile( File file ) {
         int pos = -1;
 
         Component[] components = fileList.getComponents();
-        for( int i = 0; i < components.length; i++){
-            if( components[i] instanceof FilePanel) {
-                FilePanel fp = (FilePanel) components[i];
-                if( fp.getFilePath().equals( file.getPath() )) {
+        for ( int i = 0; i < components.length; i++ ) {
+            if ( components[i] instanceof FilePanel ) {
+                FilePanel fp = ( FilePanel ) components[i];
+                if ( fp.getFilePath().equals( file.getPath() ) ) {
                     pos = i;
                     break;
                 }
@@ -152,11 +156,11 @@ public class MainFrame extends JFrame {
     }
 
 
-    private void launchThreads(){
+    private void launchThreads() {
         Component[] components = fileList.getComponents();
-        for( int i = 0; i < components.length; i++){
-            if( components[i] instanceof FilePanel) {
-                FilePanel fp = (FilePanel) components[i];
+        for ( int i = 0; i < components.length; i++ ) {
+            if ( components[i] instanceof FilePanel ) {
+                FilePanel fp = ( FilePanel ) components[i];
                 Thread t = new Thread( new FileRunner( fp.getFilePath() ) );
                 t.start();
             }
