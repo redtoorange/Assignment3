@@ -1,5 +1,5 @@
 /**
- * MainDriver.java - Description
+ * MainDriver.java - Launch the Main GUI of the Application.
  *
  * @author  Andrew McGuiness
  * @version 01/Nov/2017

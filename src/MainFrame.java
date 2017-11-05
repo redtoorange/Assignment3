@@ -4,7 +4,12 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * MainFrame.java - Description
+ * MainFrame.java - The MainFrame of the Application provides the user with the ability to select files with a
+ * FileChooser and view the files in a FileList.  The files can be removed from the FileList with the delete buttons
+ * and the exact path to the files can be modified through the TextFields.
+ * <p>
+ * Once the user has added the files that want, the load files button will launch a separate Thread to parse each file
+ * in parallel.  The contents of each file will be output and displayed in their own Windows.
  *
  * @author Andrew McGuiness
  * @version 11/5/2017
@@ -25,7 +30,7 @@ public class MainFrame extends JFrame {
     private int fileCount = 0;  // Number of files that have been select
 
 
-    // Initialize the GUI and then display the primary window
+    /** Initialize the GUI and then display the primary window. */
     public MainFrame() {
         initGUI();
         display();
@@ -53,7 +58,7 @@ public class MainFrame extends JFrame {
 
     // Load in the file for the Window
     private void loadIcon() {
-        ImageIcon img = new ImageIcon( getClass().getResource( "folder.png" ) );
+        ImageIcon img = new ImageIcon( getClass().getResource( "assets/folder.png" ) );
         setIconImage( img.getImage() );
     }
 
@@ -115,6 +120,7 @@ public class MainFrame extends JFrame {
         addFilesButton.setPreferredSize( new Dimension( BUTTON_WIDTH, BUTTON_HEIGHT ) );
         addFilesButton.addActionListener( ( e ) -> selectFiles() );
         c.gridx = 0;
+        c.gridy = 2;
         c.gridwidth = 1;
         mainPanel.add( addFilesButton, c );
 
