@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @author
  * @version 03/Nov/2017
  */
-public class FileRunner implements Runnable {
+public class FileParserThread implements Runnable {
     private int wordCount = 0;
     private int letterCount = 0;
     private String fileContents = "";
@@ -19,7 +19,7 @@ public class FileRunner implements Runnable {
     private File file = null;
     private boolean validFile = false;
 
-    public FileRunner( String filePath ) {
+    public FileParserThread( String filePath ) {
         file = new File( filePath );
 
         if ( file.exists() )

@@ -8,7 +8,6 @@ import java.awt.*;
  * @version 11/5/2017
  */
 public class FileOutputFrame extends JFrame {
-    //TODO: Make the top not look like shit.
     public static final int WINDOW_WIDTH = 500;
     public static final int WINDOW_HEIGHT = 500;
 
@@ -17,6 +16,8 @@ public class FileOutputFrame extends JFrame {
 
     public static final int LABEL_WIDTH = 100;
     public static final int LABEL_HEIGHT = 50;
+
+    private static ImageIcon imageIcon = null;
 
     private String fileName;
     private String fileContents;
@@ -38,6 +39,9 @@ public class FileOutputFrame extends JFrame {
         setTitle( fileName );
         setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
         setSize( WINDOW_WIDTH, WINDOW_HEIGHT );
+        setResizable( false );
+
+        loadIcon();
 
 
         JPanel filePanel = new JPanel( new GridBagLayout() );
@@ -71,6 +75,12 @@ public class FileOutputFrame extends JFrame {
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
 
         filePanel.add( scrollPane, c );
+    }
+
+    private void loadIcon() {
+        if ( imageIcon == null )
+            imageIcon = new ImageIcon( getClass().getResource( "note.png" ) );
+        setIconImage( imageIcon.getImage() );
     }
 
     private void display() {

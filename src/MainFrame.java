@@ -31,21 +31,43 @@ public class MainFrame extends JFrame {
     private int fileCount = 0;
 
     public MainFrame() {
-        setTitle( "Multi-threaded File Parser" );
         threads = new ArrayList< Thread >();
 
+        initGUI();
+        display();
+    }
 
+    private void initGUI() {
+        setTitle( "Multi-threaded File Parser" );
+        setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
+        setSize( WINDOW_WIDTH, WINDOW_HEIGHT );
+        setResizable( false );
+
+        initLookAndFeel();
+        loadIcon();
+        initComponents();
+    }
+
+    private void loadIcon() {
+        ImageIcon img = new ImageIcon( getClass().getResource( "folder.png" ) );
+        setIconImage( img.getImage() );
+    }
+
+    private void display() {
+        setVisible( true );
+    }
+
+    private void initLookAndFeel() {
         try {
-            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+            for ( UIManager.LookAndFeelInfo l : UIManager.getInstalledLookAndFeels() ) {
+                System.out.println( l.getName() );
+                if ( l.getName().equals( "Nimbus" ) ) {
+                    UIManager.setLookAndFeel( l.getClassName() );
+                }
+            }
         } catch ( Exception e ) {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
-
-        initComponents();
-
-        setSize( WINDOW_WIDTH, WINDOW_HEIGHT );
-        setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
-        setVisible( true );
     }
 
     private void initComponents() {
@@ -76,8 +98,8 @@ public class MainFrame extends JFrame {
 
         JScrollPane scrollPane = new JScrollPane( fileList );
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
-        scrollPane.setBorder( BorderUIResource.getBlackLineBorderUIResource() );
-        scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER  );
+        scrollPane.setBorder( BorderUIResource.getLoweredBevelBorderUIResource() );
+        scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
         mainPanel.add( scrollPane, c );
 
 
@@ -161,7 +183,7 @@ public class MainFrame extends JFrame {
         for ( int i = 0; i < components.length; i++ ) {
             if ( components[i] instanceof FilePanel ) {
                 FilePanel fp = ( FilePanel ) components[i];
-                Thread t = new Thread( new FileRunner( fp.getFilePath() ) );
+                Thread t = new Thread( new FileParserThread( fp.getFilePath() ) );
                 t.start();
             }
         }
