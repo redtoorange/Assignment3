@@ -2,16 +2,15 @@ import javax.swing.*;
 import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-/*
- * Created by JFormDesigner on Wed Nov 01 14:05:07 EDT 2017
- */
-
 
 /**
- * @author unknown
+ * MainFrame.java - Description
+ *
+ * @author Andrew McGuiness
+ * @version 11/5/2017
  */
 public class MainFrame extends JFrame {
+    // GUI Constants
     public static final int WINDOW_WIDTH = 500;
     public static final int WINDOW_HEIGHT = 500;
 
@@ -22,61 +21,70 @@ public class MainFrame extends JFrame {
     public static final int BUTTON_HEIGHT = 40;
 
 
-    private JFileChooser fileChooser;
-    private JPanel mainPanel;
-    private JPanel fileList;
+    private JPanel fileList;    // Container for all FilePanels
+    private int fileCount = 0;  // Number of files that have been select
 
-    private ArrayList< Thread > threads;
 
-    private int fileCount = 0;
-
+    // Initialize the GUI and then display the primary window
     public MainFrame() {
-        threads = new ArrayList< Thread >();
-
         initGUI();
         display();
     }
 
+
+    // Setup the Main Window and the Components
     private void initGUI() {
+        initWindow();
+        initComponents();
+    }
+
+
+    // Setup the primary JFrame
+    private void initWindow() {
         setTitle( "Multi-threaded File Parser" );
         setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
         setSize( WINDOW_WIDTH, WINDOW_HEIGHT );
         setResizable( false );
 
-        initLookAndFeel();
+        setLookAndFeel();
         loadIcon();
-        initComponents();
     }
 
+
+    // Load in the file for the Window
     private void loadIcon() {
         ImageIcon img = new ImageIcon( getClass().getResource( "folder.png" ) );
         setIconImage( img.getImage() );
     }
 
+
+    // Show the Window
     private void display() {
         setVisible( true );
     }
 
-    private void initLookAndFeel() {
+
+    // Attempt to set the LookAndFeel to something less horrid
+    private void setLookAndFeel() {
         try {
             for ( UIManager.LookAndFeelInfo l : UIManager.getInstalledLookAndFeels() ) {
-                System.out.println( l.getName() );
                 if ( l.getName().equals( "Nimbus" ) ) {
                     UIManager.setLookAndFeel( l.getClassName() );
+                    break;
                 }
             }
         } catch ( Exception e ) {
-            // If Nimbus is not available, you can set the GUI to another look and feel.
+            System.err.println( "Failed to load Nimbus look and feel." );
         }
     }
 
-    private void initComponents() {
-        fileChooser = new JFileChooser();
-        fileChooser.setMultiSelectionEnabled( true );
 
-        mainPanel = new JPanel( new GridBagLayout() );
+    // Initialize the Buttons and the FileList JPanel to hold the fileList
+    private void initComponents() {
+        JPanel mainPanel = new JPanel( new GridBagLayout() );
         setContentPane( mainPanel );
 
+        // Create a label for the File List
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -85,60 +93,53 @@ public class MainFrame extends JFrame {
         mainPanel.add( new JLabel( "Selected Files:" ), c );
 
 
-        c.gridy = 1;
-        c.gridwidth = 2;
-
+        // Create the JPanel that will hold all the created FilePanels
         fileList = new JPanel();
         fileList.setPreferredSize( new Dimension( FilePanel.PANE_WIDTH, FilePanel.PANE_HEIGHT ) );
+        fileList.setLayout( new BoxLayout( fileList, BoxLayout.Y_AXIS ) );
 
 
-        BoxLayout box = new BoxLayout( fileList, BoxLayout.Y_AXIS );
-        fileList.setLayout( box );
-
-
+        // Create a ScrollPane to hold the FileList
         JScrollPane scrollPane = new JScrollPane( fileList );
         scrollPane.setPreferredSize( new Dimension( SCROLL_WIDTH, SCROLL_HEIGHT ) );
         scrollPane.setBorder( BorderUIResource.getLoweredBevelBorderUIResource() );
         scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+        c.gridy = 1;
+        c.gridwidth = 2;
         mainPanel.add( scrollPane, c );
 
 
+        // Open up the file chooser and let the user select files to load.
+        //  if the file is already present, it will be ignored.
         JButton addFilesButton = new JButton( "Add Files" );
         addFilesButton.setPreferredSize( new Dimension( BUTTON_WIDTH, BUTTON_HEIGHT ) );
-        addFilesButton.addActionListener( ( ae ) -> {
-            fileChooser.showDialog( null, "Select" );
-
-            File[] selectedFiles = fileChooser.getSelectedFiles();
-
-            if ( selectedFiles.length > 0 ) {
-                for ( int i = 0; i < selectedFiles.length; i++ )
-                    addFile( selectedFiles[i] );
-            }
-        } );
-
+        addFilesButton.addActionListener( ( e ) -> selectFiles() );
         c.gridx = 0;
-        c.gridy = 2;
         c.gridwidth = 1;
         mainPanel.add( addFilesButton, c );
 
 
+        // The launch button will create and start all the Threads, one for each
+        //  filePanel within the fileList.
         JButton loadFiles = new JButton( "Load Files" );
         loadFiles.setPreferredSize( new Dimension( BUTTON_WIDTH, BUTTON_HEIGHT ) );
-        loadFiles.addActionListener( ( e ) -> launchThreads() );
+        loadFiles.addActionListener( ( e ) -> launchFileThreads() );
         c.gridx = 1;
-        c.gridy = 2;
         c.anchor = GridBagConstraints.EAST;
         mainPanel.add( loadFiles, c );
     }
 
-
+    // Attempt to add a file to the fileList
     private void addFile( File file ) {
-        int position = locateFile( file );
+        int position = locateFile( file );  //See if the file is already there
 
+        // If the position is -1, then the File wasn't found
         if ( position < 0 ) {
+            // Add the filePanel to the fileList JPanel
             fileList.add( new FilePanel( file, this ) );
             fileCount++;
 
+            // Resize the panel
             fileList.setPreferredSize( new Dimension( FilePanel.PANE_WIDTH, FilePanel.PANE_HEIGHT * fileCount ) );
 
             repaint();
@@ -146,13 +147,17 @@ public class MainFrame extends JFrame {
         }
     }
 
+    // Attempt to remove a file from the fileList
     public void removeFile( File file ) {
-        int position = locateFile( file );
+        int position = locateFile( file );  //Find it
 
+        // If position is -1, the file wasn't found
         if ( position >= 0 ) {
+            // Remove it from the panel
             fileList.remove( position );
             fileCount--;
 
+            // Resize the panel
             fileList.setPreferredSize( new Dimension( FilePanel.PANE_WIDTH, FilePanel.PANE_HEIGHT * fileCount ) );
 
             repaint();
@@ -160,13 +165,16 @@ public class MainFrame extends JFrame {
         }
     }
 
+    // Find the position of a file within the fileList
     private int locateFile( File file ) {
-        int pos = -1;
+        int pos = -1;   // If a file wasn't found, it's position is -1
 
         Component[] components = fileList.getComponents();
         for ( int i = 0; i < components.length; i++ ) {
             if ( components[i] instanceof FilePanel ) {
                 FilePanel fp = ( FilePanel ) components[i];
+
+                // Found the file, set pos to it's index and break out
                 if ( fp.getFilePath().equals( file.getPath() ) ) {
                     pos = i;
                     break;
@@ -178,14 +186,30 @@ public class MainFrame extends JFrame {
     }
 
 
-    private void launchThreads() {
+    // Launch a FileParserThread for each selected file.
+    private void launchFileThreads() {
         Component[] components = fileList.getComponents();
         for ( int i = 0; i < components.length; i++ ) {
             if ( components[i] instanceof FilePanel ) {
+                //Get the FileName from the FilePanel and create a FileParserThread with it
                 FilePanel fp = ( FilePanel ) components[i];
                 Thread t = new Thread( new FileParserThread( fp.getFilePath() ) );
                 t.start();
             }
         }
+    }
+
+
+    // Launch the file chooser and allow the user to pick some files
+    private void selectFiles() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle( "Select Files to add" );
+        fileChooser.setMultiSelectionEnabled( true );
+
+        fileChooser.showDialog( null, "Add File(s)" );
+
+        // Attempt to add the selected files
+        for ( File nextFile : fileChooser.getSelectedFiles() )
+            addFile( nextFile );
     }
 }

@@ -3,9 +3,9 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * ${FILE_NAME}.java - Description
+ * FilePanel.java - Description
  *
- * @author
+ * @author  Andrew McGuiness
  * @version 03/Nov/2017
  */
 public class FilePanel extends JPanel {

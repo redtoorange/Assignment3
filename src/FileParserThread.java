@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * ${FILE_NAME}.java - Description
+ * FileParserThread.java - Description
  *
- * @author
+ * @author  Andrew McGuiness
  * @version 03/Nov/2017
  */
 public class FileParserThread implements Runnable {
