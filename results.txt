@@ -22,3 +22,7 @@ Thread-9:	 the file "hgignore_global - Copy (2).txt" has 23 words and 82 letters
 
 Thread-4:	 the file "gitignore_global - Copy (3).txt" has 32 words and 134 letters.
 
+Thread-3:	 the file "0_some_test.java" has 105 words and 1010 letters.
+
+Thread-4:	 the file "1_some_test.txt" has 319 words and 1942 letters.
+
