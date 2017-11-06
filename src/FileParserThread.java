@@ -18,6 +18,7 @@ public class FileParserThread implements Runnable {
     private int letterCount = 0;
     private String fileContents = "";
 
+    private ResultsWriter resultsWriter;
     private File file = null;
     private boolean validFile = false;
 
@@ -27,7 +28,8 @@ public class FileParserThread implements Runnable {
      *
      * @param filePath Path to the file that needs to be parsed.
      */
-    public FileParserThread( String filePath ) {
+    public FileParserThread( String filePath, ResultsWriter resultsWriter ) {
+        this.resultsWriter = resultsWriter;
         file = new File( filePath );
 
         if ( file.exists() )
@@ -39,8 +41,14 @@ public class FileParserThread implements Runnable {
     /** Attempt to parse the contents of the file, and if successful, display the output inside of a new Window. */
     @Override
     public void run() {
-        if ( validFile && parseFile() )
+        if ( validFile && parseFile() ){
+            String output = Thread.currentThread().getName() +
+                    ":\t the file \"" + file.getName() +"\" has " + wordCount + " words and " +
+                     + letterCount + " letters.\n";
+            writeResults( output );
             new FileOutputFrame( file.getName(), fileContents, wordCount, letterCount );
+        }
+
     }
 
 
@@ -108,5 +116,19 @@ public class FileParserThread implements Runnable {
                 message,
                 "File Load Error",
                 JOptionPane.ERROR_MESSAGE );
+    }
+
+    private void writeResults( String text ){
+        boolean written = false;
+        while( !written ){
+            written = resultsWriter.write( text );
+            if( !written ) {
+                try {
+                    Thread.sleep( 10 );
+                } catch ( InterruptedException e ) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

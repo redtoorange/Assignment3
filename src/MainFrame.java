@@ -26,14 +26,18 @@ public class MainFrame extends JFrame {
     public static final int BUTTON_HEIGHT = 40;
 
 
+    private ResultsWriter resultsWriter;
     private JPanel fileList;    // Container for all FilePanels
     private int fileCount = 0;  // Number of files that have been select
 
 
     /** Initialize the GUI and then display the primary window. */
     public MainFrame() {
+        resultsWriter = new ResultsWriter( "results.txt" );
+
         initGUI();
         display();
+        resultsWriter.cleanUp();
     }
 
 
@@ -199,7 +203,7 @@ public class MainFrame extends JFrame {
             if ( components[i] instanceof FilePanel ) {
                 //Get the FileName from the FilePanel and create a FileParserThread with it
                 FilePanel fp = ( FilePanel ) components[i];
-                Thread t = new Thread( new FileParserThread( fp.getFilePath() ) );
+                Thread t = new Thread( new FileParserThread( fp.getFilePath(), resultsWriter ) );
                 t.start();
             }
         }
@@ -218,4 +222,8 @@ public class MainFrame extends JFrame {
         for ( File nextFile : fileChooser.getSelectedFiles() )
             addFile( nextFile );
     }
+
+
+
+
 }

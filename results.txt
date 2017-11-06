@@ -1,0 +1,24 @@
+Thread-6:	 the file "gitignore_global - Copy (5).txt" has 32 words and 134 letters.
+
+Thread-12:	 the file "hgignore_global - Copy (5).txt" has 23 words and 82 letters.
+
+Thread-7:	 the file "gitignore_global - Copy.txt" has 32 words and 134 letters.
+
+Thread-3:	 the file "gitignore_global - Copy (2).txt" has 32 words and 134 letters.
+
+Thread-13:	 the file "hgignore_global - Copy.txt" has 23 words and 82 letters.
+
+Thread-11:	 the file "hgignore_global - Copy (4).txt" has 23 words and 82 letters.
+
+Thread-14:	 the file "hgignore_global.txt" has 23 words and 82 letters.
+
+Thread-10:	 the file "hgignore_global - Copy (3).txt" has 23 words and 82 letters.
+
+Thread-8:	 the file "gitignore_global.txt" has 32 words and 134 letters.
+
+Thread-5:	 the file "gitignore_global - Copy (4).txt" has 32 words and 134 letters.
+
+Thread-9:	 the file "hgignore_global - Copy (2).txt" has 23 words and 82 letters.
+
+Thread-4:	 the file "gitignore_global - Copy (3).txt" has 32 words and 134 letters.
+
