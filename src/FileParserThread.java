@@ -45,8 +45,18 @@ public class FileParserThread implements Runnable {
             String output = Thread.currentThread().getName() +
                     ":\t the file \"" + file.getName() +"\" has " + wordCount + " words and " +
                      + letterCount + " letters.\n";
+
+            // Write to the results file about this threads's completion
             writeResults( output );
-            new FileOutputFrame( file.getName(), fileContents, wordCount, letterCount );
+
+            //Avoid Swing Thread errors by offloading the GUI onto the EDT
+            SwingUtilities.invokeLater( new Runnable() {
+                @Override
+                public void run() {
+                    new FileOutputFrame( file.getName(), fileContents, wordCount, letterCount );
+                }
+            } );
+
         }
 
     }

@@ -1,28 +1,76 @@
-Thread-6:	 the file "gitignore_global - Copy (5).txt" has 32 words and 134 letters.
+Thread-5:	 the file "Ada.url" has 2 words and 68 letters.
 
-Thread-12:	 the file "hgignore_global - Copy (5).txt" has 23 words and 82 letters.
+Thread-8:	 the file "Default.rdp" has 77 words and 841 letters.
 
-Thread-7:	 the file "gitignore_global - Copy.txt" has 32 words and 134 letters.
+Thread-10:	 the file "Godot.url" has 2 words and 68 letters.
 
-Thread-3:	 the file "gitignore_global - Copy (2).txt" has 32 words and 134 letters.
+Thread-9:	 the file "Document.docx" has 300 words and 2520 letters.
 
-Thread-13:	 the file "hgignore_global - Copy.txt" has 23 words and 82 letters.
+Thread-6:	 the file "Andrew's Notebook.url" has 2 words and 68 letters.
 
-Thread-11:	 the file "hgignore_global - Copy (4).txt" has 23 words and 82 letters.
+Thread-7:	 the file "Art100.url" has 2 words and 68 letters.
 
-Thread-14:	 the file "hgignore_global.txt" has 23 words and 82 letters.
+Thread-11:	 the file "cpp.url" has 2 words and 68 letters.
 
-Thread-10:	 the file "hgignore_global - Copy (3).txt" has 23 words and 82 letters.
-
-Thread-8:	 the file "gitignore_global.txt" has 32 words and 134 letters.
-
-Thread-5:	 the file "gitignore_global - Copy (4).txt" has 32 words and 134 letters.
-
-Thread-9:	 the file "hgignore_global - Copy (2).txt" has 23 words and 82 letters.
-
-Thread-4:	 the file "gitignore_global - Copy (3).txt" has 32 words and 134 letters.
+Thread-4:	 the file "1_some_test.txt" has 319 words and 1942 letters.
 
 Thread-3:	 the file "0_some_test.java" has 105 words and 1010 letters.
 
+Thread-12:	 the file "gitignore_global.txt" has 32 words and 134 letters.
+
+Thread-16:	 the file "ITEC 345 - Security.url" has 2 words and 68 letters.
+
+Thread-14:	 the file "ITEC 225 - Web Programming.url" has 2 words and 68 letters.
+
+Thread-18:	 the file "ITEC110.url" has 2 words and 68 letters.
+
+Thread-15:	 the file "ITEC 324.url" has 2 words and 68 letters.
+
+Thread-28:	 the file "math.url" has 2 words and 68 letters.
+
+Thread-24:	 the file "cpp.url" has 2 words and 68 letters.
+
+Thread-21:	 the file "LWJGL.url" has 2 words and 68 letters.
+
+Thread-20:	 the file "ITEC281.url" has 2 words and 68 letters.
+
+Thread-6:	 the file "Andrew's Notebook.url" has 2 words and 68 letters.
+
+Thread-25:	 the file "gitignore_global.txt" has 32 words and 134 letters.
+
+Thread-29:	 the file "school.url" has 2 words and 68 letters.
+
+Thread-22:	 the file "My Notebook.url" has 2 words and 68 letters.
+
+Thread-7:	 the file "Art100.url" has 2 words and 68 letters.
+
+Thread-19:	 the file "ITEC120.url" has 2 words and 68 letters.
+
+Thread-5:	 the file "Ada.url" has 2 words and 68 letters.
+
+Thread-17:	 the file "ITEC 352.url" has 2 words and 68 letters.
+
+Thread-10:	 the file "Godot.url" has 2 words and 68 letters.
+
+Thread-23:	 the file "Physics.url" has 2 words and 68 letters.
+
+Thread-11:	 the file "Gradle.url" has 2 words and 68 letters.
+
+Thread-12:	 the file "ITEC 122 - Discrete Math.url" has 2 words and 68 letters.
+
+Thread-13:	 the file "ITEC 220 - Programming II.url" has 2 words and 68 letters.
+
+Thread-8:	 the file "Default.rdp" has 77 words and 841 letters.
+
+Thread-9:	 the file "Document.docx" has 300 words and 2520 letters.
+
 Thread-4:	 the file "1_some_test.txt" has 319 words and 1942 letters.
+
+Thread-3:	 the file "0_some_test.java" has 105 words and 1010 letters.
+
+Thread-27:	 the file "index.html" has 1350 words and 6636 letters.
+
+Thread-26:	 the file "hgignore_global.txt" has 23 words and 82 letters.
+
+Thread-3:	 the file "Ada.url" has 2 words and 68 letters.
 
